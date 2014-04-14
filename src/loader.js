@@ -1,46 +1,57 @@
+
 var TB = (function() {
-	function a(e, d, b) {
-		var c = e.call(null, d[b]);
-		if (c) {
-			d[b] = c
+	function factoryHanlder(callback, factory, name) {
+		var exports = callback.call(null, factory[name]);
+		if (exports) {
+			factory[name] = exports;
 		}
 	}
 	return {
-		define: function(c, j) {
-			var g = c.split("."),
-				d, f, e = window,
-				h, b;
-			for (d = 0, b = g.length - 1; d < b; d++) {
-				f = g[d];
-				if (!e[f]) {
-					e[f] = {}
-				}
-				e = e[f]
-			}
-			f = g[d];
-			if (!e[f]) {
-				e[f] = {}
-			}
-			a(j, e, f);
-			return e[f]
+		/*
+		  * 定义模块的全局方法(AMD规范)
+		  * @param { String } 模块名
+		  * @param { Function } 模块的内容
+		  * factory的参数对应依赖模块的外部接口(exports)
+		  */ 
+		define : function (namespaces, callback) {
+			var spaces = namespaces.split('.'),
+				_key,
+				mods,
+				_window = window,
+				len;
+			for(_key = 0, len = spaces.length - 1; _key < len; _key++){
+				mods = spaces[_key];
+				if(!_window[mods]) _window[mods] = {};
+				_window = _window[mods];
+			}	
+			mods = spaces[_key];
+			if(!_window[mods]) _window[mods] = {};
+			factoryHanlder(callback, _window, mods);
+			return _window[mods];
 		},
-		require: function(b, f) {
-			var e = b.split("."),
-				d = window,
-				c = 0,
-				f = f || blank;
-			while (c < e.length) {
-				d = d[e[c++]];
-				if (!d) {
-					break
+		/*
+		  * 定义模块的全局方法(CMD规范)
+		  * @param { String } 模块名
+		  * @param { Function } 模块的内容
+		  * factory的参数对应依赖模块的外部接口(exports)
+		  */
+		require : function (name, callback) {
+			var modules = name.split('.'),
+				_window = window,
+				_index = 0,
+				callback = callback || blank;
+			while(_index < modules.length){
+				_window = _window[modules[_index++]];
+				if(!_window){
+					break;
 				}
+			}	
+			if(!_window){
+				throw new Error(name + " is undefined");
+			}else{
+				callback.call(null);
 			}
-			if (!d) {
-				throw new Error(b + " is undefined")
-			} else {
-				f.call(null)
-			}
-			return d
+			return _index
 		}
 	}
 })();
