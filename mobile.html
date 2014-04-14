@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=a.html" />
+  </noscript>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>在线沟通</title>
+  <link rel="stylesheet" type="text/css" href="static/themes/default/webim.css" />
+  <script type="text/javascript">var beforeLoadTime = new Date().getTime();</script>
+</head>
+<body>
+  <noscript>
+    <div style="position:absolute;height:100%;width:100%;background-color:#fff;z-index:100"></div>
+  </noscript>
+  <div id="info"></div>
+  <div id="content"></div>
+  <div id="opt">
+    <a class="btn" id="faceBtn"><span class="btn-icon icon-face"></span></a>
+    <a class="btn" id="wordBtn"><span class="btn-icon icon-word"></span></a>
+    <span class="input-area"><input type="text" id="wordInput" class="input" placeholder="请在此输入文本内容..."/><a id="bt-target" name="bt"></a></span>
+    <input type="button" class="button" id="sendBtn" disabled="disabled" value="发送" />
+    <!-- 表情panel -->
+    <div id="faceLayer" class="panel panel-face" style="display:none"></div>
+    <!-- 常用语panel -->
+    <div id="wordList" class="panel panel-word" style="display:none"></div>
+    <!-- 系统提示 -->
+    <div id="sysTip" style="display:none"></div>
+  </div>
+  <script type="text/javascript" src="static/tongbao.min.js"></script>
+  <script type="text/javascript">
+    var query = location.search.substring(1),
+        i, item, params  = {};
+    query = query.split('&');
+    for (i = 0; item = query[i]; i++) {
+        item = item.split('=');
+        params[item[0]] = decodeURIComponent(item[1]);
+    }
+    TB.src.mobilewebim.webim.enter(params);
+    TB.src.mobilewebim.log.send(
+        'loadedtime', 
+        {
+            siteid: params.siteid,
+            b: beforeLoadTime,
+            v:  new Date().getTime() - beforeLoadTime
+        }
+    );
+    TB.src.stat.init(params);
+</script>
+</body>
+</html>
