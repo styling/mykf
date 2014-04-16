@@ -78,7 +78,9 @@ TB.define("TB.im.message", function(h) {
 		ul: 1
 	};
 	var m = "\u200B";
-
+	//将传入的p字符串replace
+	//替换掉标签头为\n
+	//将标签尾转换成所有空字符 转换成" "
 	function d(p) {
 		var o = new RegExp(m, "g"),
 			n = p.replace(/[\n\r]/g, "");
@@ -88,6 +90,7 @@ TB.define("TB.im.message", function(h) {
 		return n.replace(o, "").replace(/\u00a0/g, " ").replace(/&nbsp;/g, " ")
 	}
 
+	//字体颜色
 	function a(n) {
 		if (!/^\#[\da-f]{6}$/i.test(n)) {
 			return 0
@@ -96,6 +99,7 @@ TB.define("TB.im.message", function(h) {
 		return parseInt(n, 16)
 	}
 
+	//字体 字号 加粗 下划线 
 	function k(q) {
 		var o = ["<font"],
 			p = [],
@@ -123,6 +127,7 @@ TB.define("TB.im.message", function(h) {
 			json: p.join("")
 		}
 	}
+
 
 	function g(r, n) {
 		var p, q, o = {};
@@ -153,6 +158,7 @@ TB.define("TB.im.message", function(h) {
 		o.json = o.json.replace(/,\s*$/, "");
 		return o
 	}
+	//处理信息字符串
 	h.parseText = function(r) {
 		var p = [],
 			n = [],
@@ -168,6 +174,7 @@ TB.define("TB.im.message", function(h) {
 			json: "[" + p.join(",") + "]"
 		}
 	};
+	//处理信息对象
 	h.parseMessage = function(r) {
 		var o = [],
 			n, q, p;

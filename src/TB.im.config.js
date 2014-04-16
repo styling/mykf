@@ -1,6 +1,7 @@
-TB.define("TB.im.config", function(a) {
-	a.FACE_ROOT = "http://TB.tongbao.com/img/face/";
-	a.face = {
+TB.define("TB.im.config", function(tb) {
+	//绝对地址
+	tb.FACE_ROOT = "http://localhost:8080/kf/static/images/";
+	tb.face = {
 		'\u5fae\u7b11': "1e376a99d4059562772aad9ac065fd71",
 		'\u5927\u7b11': "c5ce7689438e5ee92c5942d4885fc198",
 		'\u5077\u7b11': "d2ff68289e44c32d61f17e9cfb8f781a",

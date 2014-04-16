@@ -48,7 +48,7 @@ TongBao.string.format = function(c, a) {
 };
 //number空间
 TongBao.number = TongBao.number || {};
-//用于转换time格式  2014-04-10
+//用于将time字符串补位
 TongBao.number.pad = function(d, c) {
 	var e = "",
 		b = (d < 0),

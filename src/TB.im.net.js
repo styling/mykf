@@ -17,12 +17,12 @@ TB.define("TB.im.net", function(I) {
 			TB_GETUSERNAME: "__SCRIPT_TB_USERNAME__",
 			TB_GETGROUPNAME: "__SCRIPT_TB_GETGROUPNAME__"
 		}, n = {
-			RCV_ROOT: "http://r.TB.TongBao.com/",
-			TB_ROOT: "http://TB.TongBao.com/v3/",
-			HI_SERVER: "/"
+			RCV_ROOT: "http://localhost:8080",
+			TB_ROOT: "http://localhost:8080",
+			HI_SERVER: "/mykf/server.php"
 		};
 	var f = false;
-
+	//inserScript
 	function s(M, K) {
 		var L = document.getElementsByTagName("head")[0];
 		if (u(M)) {
@@ -40,6 +40,7 @@ TB.define("TB.im.net", function(I) {
 		L.appendChild(G)
 	}
 
+	//jsonp
 	function J(M, G, L) {
 		if (L) {
 			var K = "jsonp_" + (+new Date());
@@ -55,6 +56,7 @@ TB.define("TB.im.net", function(I) {
 		s(M, G)
 	}
 
+	//lazyLoad
 	function g(K) {
 		var G = new Image(),
 			L = "__IMG_" + m() + "__";
@@ -69,10 +71,12 @@ TB.define("TB.im.net", function(I) {
 		G = null
 	}
 
+	//返回时间戳
 	function m() {
 		return new Date().getTime().toString(36)
 	}
 
+	//成功或者失败状态
 	function i(L, K) {
 		var N = K.onsuccess,
 			G = K.onfailure,
@@ -106,6 +110,7 @@ TB.define("TB.im.net", function(I) {
 		return y.request(L, K)
 	}
 
+	//post
 	function E(K, L, M, G) {
 		return i(K, {
 			method: "POST",
@@ -115,6 +120,7 @@ TB.define("TB.im.net", function(I) {
 		})
 	}
 
+	//get
 	function F(K, L, G) {
 		return i(K, {
 			method: "GET",
@@ -123,6 +129,7 @@ TB.define("TB.im.net", function(I) {
 		})
 	}
 
+	//判断L.fiedls类型 触发pick response操作
 	function p(L) {
 		var G, K;
 		if (f) {
@@ -151,6 +158,7 @@ TB.define("TB.im.net", function(I) {
 		})
 	}
 
+	//离线或者掉线
 	function x(G) {
 		if (G == "offline" || G == "kicked") {
 			I.fire("error", "offline")
@@ -177,6 +185,7 @@ TB.define("TB.im.net", function(I) {
 		}
 	}
 
+	//未能成功重连
 	function j(G, K) {
 		return function() {
 			var L = Array.prototype.slice.call(arguments);

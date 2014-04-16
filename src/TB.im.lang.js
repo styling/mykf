@@ -1,5 +1,5 @@
-TB.define("TB.im.lang", function(a) {
-	a.TEXT = {
+TB.define("TB.im.lang", function(tb) {
+	tb.TEXT = {
 		WELCOME: "您好！有什么需要帮忙的么？",
 		DEFAULT_CSNAME: "在线客服",
 		FILE_UNSUPPORT: "[文件]",
@@ -11,7 +11,7 @@ TB.define("TB.im.lang", function(a) {
 		INPUT: "正在输入...",
 		RECONNECT: "连接已恢复，您可以继续沟通"
 	};
-	a.ERROR = {
+	tb.ERROR = {
 		INIT: "对不起，网络连接失败，请稍后重试连接",
 		CONFLICT: "您输入的内容存在安全隐患，发送失败",
 		OFFLINE: "由于网络中断时间较长，请刷新页面继续沟通",

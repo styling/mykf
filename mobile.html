@@ -32,13 +32,26 @@
   </div>
   <script type="text/javascript" src="static/tongbao.min.js"></script>
   <script type="text/javascript">
+
+    var zid=1;
+    var id_ct=1;
+
     var query = location.search.substring(1),
         i, item, params  = {};
     query = query.split('&');
     for (i = 0; item = query[i]; i++) {
         item = item.split('=');
         params[item[0]] = decodeURIComponent(item[1]);
+
     }
+    if(!i){
+      params["zid"] = 1;
+      params["id_ct"] = 1;
+    }
+
+    
+   // if(params)
+   //  console.log(params);
     TB.src.mobilewebim.webim.enter(params);
     TB.src.mobilewebim.log.send(
         'loadedtime', 
@@ -48,7 +61,7 @@
             v:  new Date().getTime() - beforeLoadTime
         }
     );
-    TB.src.stat.init(params);
+   TB.src.stat.init(params);
 </script>
 </body>
 </html>

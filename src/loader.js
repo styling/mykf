@@ -1,4 +1,3 @@
-
 var TB = (function() {
 	function factoryHanlder(callback, factory, name) {
 		var exports = callback.call(null, factory[name]);

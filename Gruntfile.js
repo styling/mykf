@@ -8,19 +8,19 @@ module.exports = function (grunt) {
       },
       build: {
         src: [
-         // "src/lang.js",
+        //  "src/lang.js",
           "src/main.js",
           "src/loader.js",
           "src/TB.im.config.js",
           "src/TB.im.lang.js",
           "src/TB.im.message.js",
           "src/TB.im.net.js",
-          "src/TB.im.js",
-          "src/TB.stat.js",
-          "src/TB.src.mobilewebim.log.js",
-          "src/TB.src.stat.js",
-          "src/TB.src.lightapp.stat.js",
-          "src/TB.src.mobilewebim.webim.js"
+         "src/TB.im.js",
+         "src/TB.stat.js",
+         "src/TB.src.mobilewebim.log.js",
+         "src/TB.src.stat.js",
+         "src/TB.src.lightapp.stat.js",
+         "src/TB.src.mobilewebim.webim.js"
         ],
         dest: 'static/<%= pkg.file %>.min.js'
       }

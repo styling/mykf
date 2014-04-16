@@ -24,13 +24,13 @@ TB.define("TB.src.mobilewebim.webim", function(X) {
 			faceItem: '<a class="face-item" data-key="#{key}"><img src="' + E + '#{md5}.gif" /></a>',
 			custDesc: "<p>#{0}</p>",
 			custTel: '<p><span class="tel"></span><a href="tel:#{tel}">#{telTxt}</a></p>'
-		}, ab = "BRIDGE_MOBILE_WEBIM_",
-		m = "BRIDGE_WEBIM_DATA_";
+		}, ab = "TB_MOBILE_WEBIM_",/*BRIDGE*/
+		m = "TB_WEBIM_DATA_";
 	blank = function() {}, modalEles = [], fireClickHandler = function(G, af, ag) {
 		G.call(af, ag)
 	};
 	var M = {
-		CUST_INFO: "http://TB.TongBao.com/v3/?module=mobile&controller=mobileim&action=corporation"
+		CUST_INFO: "http://localhost:8080/kf/enter.php?module=mobile&controller=mobileim&action=corporation"
 	};
 	var d = {
 		from: 0,
@@ -464,7 +464,7 @@ TB.define("TB.src.mobilewebim.webim", function(X) {
 	}
 
 	function W() {
-		var ak = ["TongBao.com", "TongBao.com", "google.com", "google.cn", "bing.com", "search.live.com", "search.yahoo.com", "one.cn.yahoo.com", "sogou.com", "gougou.com", "youdao.com", "soso.com", "zhongsou.com", "search.114.vnet.cn"];
+		var ak = ["baidu.com", "baidu.com", "google.com", "google.cn", "bing.com", "search.live.com", "search.yahoo.com", "one.cn.yahoo.com", "sogou.com", "gougou.com", "youdao.com", "soso.com", "zhongsou.com", "search.114.vnet.cn"];
 		var af = ["wd", "word", "q", "q", "q", "q", "p", "p", "query", "search", "q", "w", "w", "kw"];
 		var al = ["gbk", "gbk", "utf8", "utf8", "utf8", "utf8", "utf8", "utf8", "gbk", "utf8", "utf8", "gbk", "gbk", "gbk"];
 		var ai = document.referrer;
