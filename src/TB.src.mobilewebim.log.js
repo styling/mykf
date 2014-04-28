@@ -1,5 +1,5 @@
 TB.define("TB.src.mobilewebim.log", function(a) {
-	var mobilewebimUrl = "http://TB.tongbao.com/v3/statlog/stat.gif";
+	var mobilewebimUrl = "http://localhost:8080/mykf/images/stat.gif";
 	var b = {};
 
 	function d(e) {

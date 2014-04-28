@@ -30,7 +30,7 @@ TB.define("TB.src.mobilewebim.webim", function(X) {
 		G.call(af, ag)
 	};
 	var M = {
-		CUST_INFO: "http://localhost:8080/kf/enter.php?module=mobile&controller=mobileim&action=corporation"
+		CUST_INFO: "http://localhost:8080/mykf/enter.php?module=mobile&controller=mobileim&action=corporation"
 	};
 	var d = {
 		from: 0,

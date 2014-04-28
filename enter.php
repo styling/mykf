@@ -1,4 +1,5 @@
 <?php
+	//$callback = $_GET["callback"];
 	$arr = array(
 		"bid" => "1a64b13b525703e3a6f4e8ab",
 		"wordid" => 0,
@@ -73,5 +74,6 @@
 			))
 		))
 	);
-	echo json_decode($arr);
+//	echo $_GET["callback"] . '(' . json_encode($arr) . ')';
+	printf('%s(%s);', $_REQUEST['callback'], json_encode($arr));
 ?>		

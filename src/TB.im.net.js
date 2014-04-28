@@ -1,5 +1,150 @@
 TB.define("TB.im.net", function(I) {
-	var u = TongBao.dom.g,
+	var _$ = TongBao.dom.g;
+	var tongbao_ajax = TongBao.ajax;
+	var tongbao_parse = TongBao.json.parse;
+	var has_img_net = false;
+	var tongbao_kf_config = {};
+	var config = {
+
+	};
+
+	function inserScript (mark, url) {
+		var head = document.getElementsByTagName('head')[0],
+			_script;
+		if(_$(mark)){
+			head.removeChild(_$(mark));
+		}
+		if(url.indexOf("_t") < 0){
+			url += (url.indexOf("?") >= 0 ? "&" : "?") + "_t=" + dateMark();
+		}
+		_script = document.createElement("script");
+		_script.setAttribute("type", "text/javascript");
+		_script.setAttribute("language", "javascript");
+		_script.setAttribute("id", _$(mark));
+		_script.setAttribute("src", url);
+		_script.setAttribute("charset", "UTF-8");
+
+	}
+
+	//jsonp
+	function _jsonp(mark, url, callback) {
+		if (callback) {
+			var jsonp_callback = "jsonp_" + (+new Date());
+			I.callback[jsonp_callback] = function(N) {
+				callback.call(null, N)
+			};
+			if (url.indexOf("?") >= 0) {
+				url += "&callback=TB.im.net.callback." + jsonp_callback
+			} else {
+				url += "?callback=TB.im.net.callback." + jsonp_callback
+			}
+		}
+		s(mark, url)
+	}
+
+	function dateMark () {
+		return new Date().getTime().toString(36)
+	}
+
+	function deferred_img(url) {
+		var __IMG = new Image(),
+			_img_ = "__IMG_" + dateMark() + "__";
+		if (url.indexOf("_t") < 0) {
+			url += (url.indexOf("?") >= 0 ? "&" : "?") + "_t=" + dateMark()
+		}
+		window[_img_] = __IMG;
+		__IMG.onload = __IMG.onerror = function() {
+			window[_img_] = null
+		};
+		__IMG.src = url;
+		__IMG = null
+	}
+
+	//信息成功与失败操作
+	function i(url, callback) {
+		var success_ = callback.onsuccess,
+			failure_ = callback.onfailure,
+			data_ = callback.data || "";
+		callback.onsuccess = function(P, O) {
+			O = tongbao_parse(O);
+			if (O.result && O.result.toLowerCase() == "ok") {
+				success_ && success_.call(null, O.content)
+			} else {
+				failure_ && failure_.call(null, O.result, O.content)
+			}
+		};
+		callback.onfailure = function() {
+			failure_ && failure_.call()
+		};
+		if (callback.method == "POST") {
+			url += "?_t=" + dateMark();
+			//data_ += "&seq=" + H.seq++;
+			//if (data_.charAt(0) == "&") {
+			//	data_ = data_.substring(1)
+			//}
+			callback.data = data_
+		} else {
+			data_ = [];
+			data_.push("_t=" + dateMark());
+		//	data_.push("session=" + H.session);
+		//	data_.push("seq=" + H.seq++);
+			url += (url.indexOf("?") >= 0 ? "&" : "?") + data_.join("&")
+		}
+		return tongbao_ajax.request(url, callback)
+	}
+
+
+	//post
+	function messagePOST(url, data, success_, failure_) {
+		return i(url, {
+			method: "POST",
+			data: data,
+			onsuccess: success_,
+			onfailure: failure_
+		})
+	}
+
+	//get
+	function messageGET(url, success_, failure_) {
+		return i(url, {
+			method: "GET",
+			onsuccess: success_,
+			onfailure: failure_
+		})
+	}
+
+	//判断L.fiedls类型 触发pick response操作
+	function pickReponse(data) {
+		var i, hasData;
+		if (has_img_net) {
+			return
+		}
+		//设置cookie顺序 name value path domain serare的{}集合
+		if (data.fields && "[object Array]" == Object.prototype.toString.call(data.fields)) {
+			//ack域
+			//H.ack = data.ack || H.ack;
+			//TongBao.cookie.set("BRIDGE_ACK", H.ack, {
+			//	expires: 15 * 1000
+			//});
+			for (i = 0; hasData = data.fields[i]; i++) {
+				if (tongbao_kf_config[hasData.command]) {
+					tongbao_kf_config[hasData.command](hasData)
+				}
+			}
+		}
+		if (has_img_net) {
+			return
+		}
+		I.fire("pick", "response", {
+			status: 0,
+	//		bid: H.bid,
+	//		session: H.session,
+	//		seq: H.seq,
+	//		ack: H.ack
+		})
+	}
+	
+	/*var u = TongBao.dom.g,
 		y = TongBao.ajax,
 		a = TongBao.json.parse,
 		o = null,
@@ -17,31 +162,14 @@ TB.define("TB.im.net", function(I) {
 			TB_GETUSERNAME: "__SCRIPT_TB_USERNAME__",
 			TB_GETGROUPNAME: "__SCRIPT_TB_GETGROUPNAME__"
 		}, n = {
-			RCV_ROOT: "http://localhost:8080",
-			TB_ROOT: "http://localhost:8080",
-			HI_SERVER: "/mykf/server.php"
+			RCV_ROOT: "http://localhost:8080/mykf/",
+			TB_ROOT: "http://localhost:8080/mykf/",
+			HI_SERVER: "http://localhost:8080/mykf/"
 		};
-	var f = false;
-	//inserScript
-	function s(M, K) {
-		var L = document.getElementsByTagName("head")[0];
-		if (u(M)) {
-			L.removeChild(u(M))
-		}
-		if (K.indexOf("_t") < 0) {
-			K += (K.indexOf("?") >= 0 ? "&" : "?") + "_t=" + m()
-		}
-		var G = document.createElement("script");
-		G.setAttribute("type", "text/javascript");
-		G.setAttribute("language", "javascript");
-		G.setAttribute("id", M);
-		G.setAttribute("src", K);
-		G.setAttribute("charset", "UTF-8");
-		L.appendChild(G)
-	}
+	var f = false;*/
 
 	//jsonp
-	function J(M, G, L) {
+	/*function J(M, G, L) {
 		if (L) {
 			var K = "jsonp_" + (+new Date());
 			I.callback[K] = function(N) {
@@ -54,10 +182,10 @@ TB.define("TB.im.net", function(I) {
 			}
 		}
 		s(M, G)
-	}
+	}*/
 
 	//lazyLoad
-	function g(K) {
+	/*function g(K) {
 		var G = new Image(),
 			L = "__IMG_" + m() + "__";
 		if (K.indexOf("_t") < 0) {
@@ -69,15 +197,15 @@ TB.define("TB.im.net", function(I) {
 		};
 		G.src = K;
 		G = null
-	}
+	}*/
 
 	//返回时间戳
-	function m() {
+	/*function m() {
 		return new Date().getTime().toString(36)
-	}
+	}*/
 
 	//成功或者失败状态
-	function i(L, K) {
+	/*function i(L, K) {
 		var N = K.onsuccess,
 			G = K.onfailure,
 			M = K.data || "";
@@ -108,10 +236,10 @@ TB.define("TB.im.net", function(I) {
 			L += (L.indexOf("?") >= 0 ? "&" : "?") + M.join("&")
 		}
 		return y.request(L, K)
-	}
+	}*/
 
 	//post
-	function E(K, L, M, G) {
+	function messagePOST(K, L, M, G) {
 		return i(K, {
 			method: "POST",
 			data: L,
@@ -121,7 +249,7 @@ TB.define("TB.im.net", function(I) {
 	}
 
 	//get
-	function F(K, L, G) {
+	function messageGET(K, L, G) {
 		return i(K, {
 			method: "GET",
 			onsuccess: L,
@@ -203,13 +331,14 @@ TB.define("TB.im.net", function(I) {
 		}
 	}
 
+	//
 	function h() {
 		if (o) {
 			return
 		}
 		c++;
 		var G = TongBao.cookie.get("BRIDGE_ACK");
-		o = F(n.HI_SERVER + "pick?imuss=" + H.bid + "&ack=" + (G == null ? H.ack : G), j(c, "success"), j(c, "failure"));
+		o = messageGET(n.HI_SERVER + "pick?imuss=" + H.bid + "&ack=" + (G == null ? H.ack : G), j(c, "success"), j(c, "failure"));
 		k = setTimeout(t, 40000)
 	}
 
@@ -222,7 +351,7 @@ TB.define("TB.im.net", function(I) {
 	}
 
 	function l(G) {
-		E(n.HI_SERVER + "communicate", "imuss=" + G.bid + "&from=&to=" + G.to + "&tid=" + G.tid + "&siteid=" + G.siteid + "&body=" + G.msg + "&time=" + G.time + "&messageid=" + G.id, b, B)
+		messagePOST(n.HI_SERVER + "communicate", "imuss=" + G.bid + "&from=&to=" + G.to + "&tid=" + G.tid + "&siteid=" + G.siteid + "&body=" + G.msg + "&time=" + G.time + "&messageid=" + G.id, b, B)
 	}
 
 	function A(G) {
@@ -247,7 +376,7 @@ TB.define("TB.im.net", function(I) {
 	}
 
 	function q(K, G) {
-		E(n.HI_SERVER + "msgack", "imuss=" + H.bid + "&from=" + encodeURIComponent(TB.im.getData("referrer")) + "&to=" + encodeURIComponent(TB.im.getData("userName")) + "&to_sub=" + (G || "0") + "&ackid=" + K)
+		messagePOST(n.HI_SERVER + "msgack", "imuss=" + H.bid + "&from=" + encodeURIComponent(TB.im.getData("referrer")) + "&to=" + encodeURIComponent(TB.im.getData("userName")) + "&to_sub=" + (G || "0") + "&ackid=" + K)
 	}
 	C.message = function(G) {
 		var L, K;
@@ -291,7 +420,7 @@ TB.define("TB.im.net", function(I) {
 	C.sendfilecancelnotify = function() {};
 	C.sendfilenotify = function(G) {
 		G = G.content;
-		E(n.HI_SERVER + "sendfilecancel", "username=" + G.username + "&fid=" + encodeURIComponent(G.fid) + "&imuss=" + H.bid);
+		messagePOST(n.HI_SERVER + "sendfilecancel", "username=" + G.username + "&fid=" + encodeURIComponent(G.fid) + "&imuss=" + H.bid);
 		I.fire("pick", "fileUnsupport")
 	};
 	C.sendfilestatusnotify = function() {};
@@ -326,8 +455,9 @@ TB.define("TB.im.net", function(I) {
 	I.setBid = function(G) {
 		H.bid = G
 	};
+	//参数初始
 	I.enter = function(K) {
-		var G = n.RCV_ROOT + "Enter.php";
+		var G = n.RCV_ROOT + "enter.php";
 		if (K) {
 			G += "?" + K
 		}
@@ -354,13 +484,13 @@ TB.define("TB.im.net", function(I) {
 		}
 	};
 	I.welcome = function(L, K, G) {
-		E(n.HI_SERVER + "welcome", L, K, G)
+		messagePOST(n.HI_SERVER + "welcome.php", L, K, G)
 	};
 	I.bridgeInit = function(L, K, G) {
-		E(n.HI_SERVER + "bridgeinit", L, K, G)
+		messagePOST(n.HI_SERVER + "bridgeinit.php", L, K, G)
 	};
 	I.getPrepareWord = function(L, K, G) {
-		E(n.HI_SERVER + "prepare", L, K, G)
+		messagePOST(n.HI_SERVER + "prepare.php", L, K, G)
 	};
 	I.pick = function(K, G) {
 		H.ack = K || "";
@@ -376,7 +506,7 @@ TB.define("TB.im.net", function(I) {
 		clearTimeout(k)
 	};
 	I.sendPreview = function(K, G) {
-		E(n.HI_SERVER + "scenemsg", "imuss=" + G.bid + "&to=" + G.to + "&body=" + K)
+		messagePOST(n.HI_SERVER + "scenemsg", "imuss=" + G.bid + "&to=" + G.to + "&body=" + K)
 	};
 	I.communicate = function(N, G, L) {
 		var M = new Date().getTime();
@@ -397,7 +527,7 @@ TB.define("TB.im.net", function(I) {
 		l(K)
 	};
 	I.logout = function() {
-		E(n.HI_SERVER + "logout", "imuss=" + H.bid)
+		messagePOST(n.HI_SERVER + "logout", "imuss=" + H.bid)
 	};
 	I.getClientName = function(G, L) {
 		var K = ["siteid=" + H.siteid];
